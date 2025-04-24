@@ -3,7 +3,6 @@ import { AuthService } from './auth.service';
 import { RegisterClientDto } from './dto/register-client.dto';
 import { LoginDto } from './dto/login.dto';
 import { RegisterClient } from './entity/register-client';
-import { Public } from './constant/constant';
 
 @Controller('auth')
 export class AuthController {
@@ -17,7 +16,6 @@ export class AuthController {
   }
 
   @Post('login')
-  @Public()
   @HttpCode(HttpStatus.OK)
   async login(@Body() dto: LoginDto) {
     return this.authService.login(dto.email, dto.password);
