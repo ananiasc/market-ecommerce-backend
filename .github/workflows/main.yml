@@ -1,0 +1,57 @@
+name: CI
+on:
+  push:
+    branches: ["main"]
+  workflow_dispatch:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
+
+    - name: Set up Node.js
+      uses: actions/setup-node@v3
+      with:
+        node-version: '18'
+
+    - name: Instalando dependencias
+      run: npm install
+
+    - name: Criando arquivo .env
+      run: |
+        echo "DATABASE_URL=${{ secrets.DB_URL }}" >> .env
+        echo "JWT_EXPIRES_IN=${{ secrets.JWT_EXPIRES }}" >> .env
+        echo "JWT_SECRET=${{ secrets.JWT_SECRET }}" >> .env
+
+    - name: Run Tests
+      run: npm run test
+  CI:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout do código
+        uses: actions/checkout@v3
+
+      - name: Instalar jq
+        run: sudo apt-get update && sudo apt-get install -y jq
+
+      - name: Obter versão do package.json
+        run: echo "API_VERSION=$(jq -r .version package.json)" >> $GITHUB_ENV
+
+      - name: Login no Docker Hub
+        uses: docker/login-action@v3.3.0
+        with:
+          username: ${{ secrets.DOCKERHUB_USR }}
+          password: ${{ secrets.DOCKERHUB_PWD }}
+
+      - name: Construir e enviar imagem Docker
+        uses: docker/build-push-action@v6.7.0
+        with:
+          context: ./
+          file: ./Dockerfile
+          push: true
+          tags: |
+            ${{ secrets.DOCKERHUB_USR }}/market-ecommerce-backend:v${{ env.API_VERSION }}
+            ${{ secrets.DOCKERHUB_USR }}/market-ecommerce-backend:latest
