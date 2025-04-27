@@ -1,6 +1,7 @@
 import { describe, vi, test, expect, beforeEach } from 'vitest';
 import { AuthService } from './auth.service';
 import * as bcrypt from 'bcrypt';
+import { UnauthorizedException } from '@nestjs/common';
 
 const mockClientRepository = {
   findByEmail: vi.fn(),
@@ -44,6 +45,27 @@ describe('AuthService', () => {
         clientEmail: 'test@email.com',
         sub: 123
       });
+    });
+
+    test('deve lançar UnauthorizedException quando o email não existe', async () => {
+      mockClientRepository.findByEmail.mockResolvedValue(null);
+      
+      await expect(authService.login('nonexistent@example.com', 'any_password'))
+        .rejects.toThrow(UnauthorizedException);
+    });
+
+    test('deve lançar UnauthorizedException quando a senha estiver incorreta', async () => {
+      const mockClient = {
+        id: 123,
+        email: 'test@example.com',
+        password: 'hashed_password'
+      };
+      
+      mockClientRepository.findByEmail.mockResolvedValue(mockClient);
+      vi.mocked(bcrypt.compare).mockImplementationOnce(() => Promise.resolve(false));
+      
+      await expect(authService.login('test@example.com', 'wrong_password'))
+        .rejects.toThrow(UnauthorizedException);
     });
   });
 });
