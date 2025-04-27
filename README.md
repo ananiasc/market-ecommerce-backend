@@ -20,7 +20,7 @@ Este é um backend construído com NestJS para demonstrar habilidades em desenvo
 
 ### Clone o repositório
 ```bash
-git clone https://github.com/seu-usuario/market-ecommerce-backend.git
+git clone git@github.com:ananiasc/market-ecommerce-backend.git
 ```
 ### Instale as dependências
 ```bash
