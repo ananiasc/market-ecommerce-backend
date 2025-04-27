@@ -30,6 +30,7 @@ jobs:
       run: npm run test
   CI:
     runs-on: ubuntu-latest
+    needs: test
     steps:
       - name: Checkout do código
         uses: actions/checkout@v3
