@@ -1,4 +1,4 @@
-import { RegisterClientDto } from "../dto/register-client.dto";
+import { RegisterClientDto } from '../dto/register-client.dto';
 
 export class RegisterClient {
   name: string;

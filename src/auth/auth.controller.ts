@@ -11,7 +11,7 @@ export class AuthController {
   @Post('register')
   @HttpCode(HttpStatus.CREATED)
   async register(@Body() dto: RegisterClientDto) {
-    let client = new RegisterClient(dto);
+    const client = new RegisterClient(dto);
     await this.authService.register(client);
   }
 

@@ -15,7 +15,9 @@ export class AuthService {
 
   async register(registerClient: RegisterClient) {
     const hashed = await bcrypt.hash(registerClient.password, 10);
-    const client = await this.prisma.clients.findUnique({ where: { email: registerClient.email } });
+    const client = await this.prisma.clients.findUnique({
+      where: { email: registerClient.email },
+    });
     if (client) {
       throw new ClientAlreadyExistException(ErrorMessages.EMAIL_ALREADY_EXIST);
     }
@@ -34,7 +36,7 @@ export class AuthService {
     if (!client || !(await bcrypt.compare(password, client.password))) {
       throw new UnauthorizedException(ErrorMessages.INVALID_CREDENCIALS);
     }
-    const payload = { clientEmail: client.email, sub: client.id  };
+    const payload = { clientEmail: client.email, sub: client.id };
     const token = await this.jwtService.signAsync(payload);
     return { token: token };
   }
