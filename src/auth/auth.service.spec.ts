@@ -1,19 +1,49 @@
-import { describe, it, expect, beforeEach } from 'vitest';
-import { Test, TestingModule } from '@nestjs/testing';
+import { describe, vi, test, expect, beforeEach } from 'vitest';
 import { AuthService } from './auth.service';
+import * as bcrypt from 'bcrypt';
+
+const mockClientRepository = {
+  findByEmail: vi.fn(),
+  create: vi.fn(),
+};
+
+const mockJwtService = {
+  signAsync: vi.fn().mockResolvedValue('generated_token'),
+};
+
+vi.mock('bcrypt', async () => ({
+  ...(await vi.importActual('bcrypt')),
+  compare: vi.fn().mockImplementation(() => Promise.resolve(true)),
+}));
 
 describe('AuthService', () => {
-  let service: AuthService;
+  let authService: AuthService;
 
-  beforeEach(async () => {
-    const module: TestingModule = await Test.createTestingModule({
-      providers: [AuthService],
-    }).compile();
+  beforeEach(() => {
+    vi.clearAllMocks();
 
-    service = module.get<AuthService>(AuthService);
+    authService = new AuthService(mockJwtService as any, mockClientRepository as any);
   });
 
-  it('should be defined', () => {
-    expect(service).toBeDefined();
+  describe('login', () => {
+    test('deve retornar um token JWT quando as credenciais estiverem corretas', async () => {
+      const mockClient = {
+        id: 123,
+        email: 'test@email.com',
+        password: 'hashed_password'
+      }
+
+      mockClientRepository.findByEmail.mockResolvedValue(mockClient);
+
+      const result = await authService.login('test@email.com', 'correct_password');
+
+      expect(result).toEqual({ token: 'generated_token' });
+      expect(mockClientRepository.findByEmail).toHaveBeenCalledWith('test@email.com');
+      expect(bcrypt.compare).toHaveBeenCalledWith('correct_password', 'hashed_password');
+      expect(mockJwtService.signAsync).toHaveBeenCalledWith({
+        clientEmail: 'test@email.com',
+        sub: 123
+      });
+    });
   });
 });
