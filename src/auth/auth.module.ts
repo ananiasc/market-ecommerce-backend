@@ -20,10 +20,7 @@ import { ClientRepository } from 'src/repositories/client/client.repository';
       }),
     }),
   ],
-  providers: [
-    AuthService, 
-    ClientRepository,
-  ],
+  providers: [AuthService, ClientRepository],
   controllers: [AuthController],
   exports: [JwtModule],
 })
