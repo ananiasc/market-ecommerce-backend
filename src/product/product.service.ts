@@ -1,4 +1,4 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
 import { Filter } from './dto/filter';
 import { ProductRepository } from 'src/repositories/product/product.repository';
 import { ProductDto } from './dto/product.dto';
@@ -41,7 +41,14 @@ export class ProductService {
     return searchDto;
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} product`;
+  async findBySlug(slug: string) {
+    if(!slug) {
+      throw new BadRequestException(ErrorMessages.SLUG_IS_EMPTY);
+    }
+    const product = await this.productRepository.findBySlug(slug);
+    if(!product) {
+      throw new NotFoundException(ErrorMessages.PRODUCT_NOT_FOUND);
+    }
+    return new ProductDto(product);
   }
 }

@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Param } from '@nestjs/common';
+import { Body, Controller, Get, Query } from '@nestjs/common';
 import { ProductService } from './product.service';
 import { Filter } from './dto/filter';
 
@@ -11,8 +11,8 @@ export class ProductController {
     return await this.productService.findByFilter(filter);
   }
 
-  @Get(':id')
-  async findOne(@Param('id') id: string) {
-    return await this.productService.findOne(+id);
+  @Get('find')
+  async findBySlug(@Query('s') slug: string) {
+    return await this.productService.findBySlug(slug);
   }
 }

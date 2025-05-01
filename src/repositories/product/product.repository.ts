@@ -107,4 +107,20 @@ export class ProductRepository {
 
     return products.length;
   }
+
+  async findBySlug(slug: string) {
+    return await this.prisma.products.findUnique({
+      where : {
+        is_active: true,
+        slug: slug
+      },
+      include: {
+        products_categories: {
+          select: {
+            category_id: true,
+          },
+        },
+      }
+    });
+  }
 }
