@@ -42,7 +42,7 @@ model products {
   created_at            DateTime              @default(now()) @db.Timestamp(6)
   updated_at            DateTime              @default(now()) @db.Timestamp(6)
   brand_id              Int
-  slug                  String                @db.VarChar(255)
+  slug                  String                @unique @db.VarChar(255)
   brands                brands                @relation(fields: [brand_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_products_brand")
   product_types         product_types         @relation(fields: [type_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
   products_categories   products_categories[]
@@ -89,5 +89,6 @@ model users {
   role         String   @db.VarChar(15)
   created_at   DateTime @default(now()) @db.Timestamp(6)
   updated_at   DateTime @default(now()) @db.Timestamp(6)
+
   @@ignore
 }
