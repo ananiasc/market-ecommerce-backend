@@ -8,7 +8,7 @@ import {
 
 export class Filter {
   @IsString()
-  @IsNotEmpty()
+  @IsOptional()
   search: string;
 
   @IsNumber()
