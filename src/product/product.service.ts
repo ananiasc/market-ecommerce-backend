@@ -4,6 +4,7 @@ import { ProductRepository } from 'src/repositories/product/product.repository';
 import { ProductDto } from './dto/product.dto';
 import { SearchDto } from './dto/search.dto';
 import { Constants } from 'src/utils/constants';
+import { ErrorMessages } from 'src/global/global.messages';
 
 @Injectable()
 export class ProductService {
@@ -13,12 +14,12 @@ export class ProductService {
     if (filter.minPrice || filter.maxPrice) {
       if (!filter.minPrice || !filter.maxPrice) {
         throw new BadRequestException(
-          'minPrice e maxPrice precisam ser preenchidos!',
+          ErrorMessages.MIN_PRICE_AND_MAX_PRICE_REQUIRED,
         );
       }
       if (filter.minPrice >= filter.maxPrice) {
         throw new BadRequestException(
-          'minPrice precisa ser menor que maxPrice!',
+          ErrorMessages.MIN_PRICE_LESS_MAX_PRICE,
         );
       }
     }
