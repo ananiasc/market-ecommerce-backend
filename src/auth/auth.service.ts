@@ -9,8 +9,8 @@ import { ClientRepository } from 'src/repositories/client/client.repository';
 @Injectable()
 export class AuthService {
   constructor(
-    private jwtService: JwtService,
-    private clientRepository: ClientRepository,
+    private readonly jwtService: JwtService,
+    private readonly clientRepository: ClientRepository,
   ) {}
 
   async register(registerClient: RegisterClient) {
