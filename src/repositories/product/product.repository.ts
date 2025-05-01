@@ -110,9 +110,9 @@ export class ProductRepository {
 
   async findBySlug(slug: string) {
     return await this.prisma.products.findUnique({
-      where : {
+      where: {
         is_active: true,
-        slug: slug
+        slug: slug,
       },
       include: {
         products_categories: {
@@ -120,7 +120,7 @@ export class ProductRepository {
             category_id: true,
           },
         },
-      }
+      },
     });
   }
 }

@@ -1,4 +1,8 @@
-import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { Filter } from './dto/filter';
 import { ProductRepository } from 'src/repositories/product/product.repository';
 import { ProductDto } from './dto/product.dto';
@@ -18,9 +22,7 @@ export class ProductService {
         );
       }
       if (filter.minPrice >= filter.maxPrice) {
-        throw new BadRequestException(
-          ErrorMessages.MIN_PRICE_LESS_MAX_PRICE,
-        );
+        throw new BadRequestException(ErrorMessages.MIN_PRICE_LESS_MAX_PRICE);
       }
     }
     const [products, totalCount] = await Promise.all([
@@ -42,11 +44,11 @@ export class ProductService {
   }
 
   async findBySlug(slug: string) {
-    if(!slug) {
+    if (!slug) {
       throw new BadRequestException(ErrorMessages.SLUG_IS_EMPTY);
     }
     const product = await this.productRepository.findBySlug(slug);
-    if(!product) {
+    if (!product) {
       throw new NotFoundException(ErrorMessages.PRODUCT_NOT_FOUND);
     }
     return new ProductDto(product);
