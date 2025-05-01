@@ -3,8 +3,7 @@ import { Filter } from './dto/filter';
 import { ProductRepository } from 'src/repositories/product/product.repository';
 import { ProductDto } from './dto/product.dto';
 import { SearchDto } from './dto/search.dto';
-
-const PRODUCTS_PER_PAGE = 20;
+import { Constants } from 'src/utils/constants';
 
 @Injectable()
 export class ProductService {
@@ -31,7 +30,7 @@ export class ProductService {
     for (const product of products) {
       productsDto.push(new ProductDto(product));
     }
-    const totalPages = Math.ceil(totalCount / PRODUCTS_PER_PAGE);
+    const totalPages = Math.ceil(totalCount / Constants.PRODUCTS_PER_PAGE);
     const searchDto: SearchDto = {
       totalItems: totalCount,
       totalPages: totalPages,

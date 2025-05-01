@@ -1,16 +1,15 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { Filter } from 'src/product/dto/filter';
-
-const PRODUCTS_PER_PAGE = 20;
+import { Constants } from 'src/utils/constants';
 
 @Injectable()
 export class ProductRepository {
   constructor(private readonly prisma: PrismaService) {}
 
   async findByFilter(filter: Filter) {
-    const skip = PRODUCTS_PER_PAGE * (filter.currentPage - 1);
-    const take = PRODUCTS_PER_PAGE;
+    const skip = Constants.PRODUCTS_PER_PAGE * (filter.currentPage - 1);
+    const take = Constants.PRODUCTS_PER_PAGE;
 
     return await this.prisma.products.findMany({
       distinct: ['id'],
